@@ -2,6 +2,10 @@ import xarray as xr
 import numpy as np
 import scipy.stats as sstats
 import dask.array as dsa
+try:
+    from xarrayMannKendall.decorators import dims_test
+except:
+    from decorators import dims_test
 
 class Mann_Kendall_test(object):
     """
@@ -52,24 +56,9 @@ class Mann_Kendall_test(object):
         MK_trends = MK_class.compute()        
         
     """
-    def dims_test(func):  
-
-        def dims_test_inner(*args, **kwargs):  
-            
-            if DataArray.dims:
-                pass
-            func(*args, **kwargs) 
-
-        return dims_test_inner  
-        
+    
     @dims_test
-    def __init__(self,DataArray,dim,alpha=0.01,MK_modified=False,method='linregress',coords_name=None):
-        if coords_name:
-            self.DataArray = DataArray.rename({(item if np.logical_or(key == "lon", key=="lat", key=='time') else key):
-                                                (key if np.logical_or(key == "lon", key=="lat", key=='time') else item) 
-                                                for key,item in coords_name.items()})
-        else:
-            self.DataArray = DataArray
+    def __init__(self,DataArray,dim='time',alpha=0.01,MK_modified=False,method='linregress',coords_name=None):
         self.dim = dim
         self.alpha = alpha
         self.method = method 
@@ -77,14 +66,12 @@ class Mann_Kendall_test(object):
         self.MK_modified = MK_modified
         
     def MK_score(self):
-        """
+        r"""
         Compute Mann Kendall score. This function constructs the sign matrix. 
         Which corresponds to the number of positive differences minus the number 
         of negative differences over time.
         above the diagonal.
-
         $ S = \sum^{n-1}_{k-1} \sum^{n}_{j-k+1} sgn(x_j -x_k)$
-        
         """
         # Matrix of signs
         sign_matrix=np.sign(np.subtract.outer(self.y[1:], self.y[:-1]).T) 
@@ -148,7 +135,7 @@ class Mann_Kendall_test(object):
         auto_cov = (np.correlate(y, y, 'full') / d)[self.n - 1:]
         return auto_cov[:nlags+1]/auto_cov[0]
     
-    def _calc_slope_MK(self,y,return_n=False):
+    def _calc_slope_MK(self,y,effective_n=False):
         '''
         Wrapper that returns the slope and significance using Mann-Kendall
         https://vsp.pnnl.gov/help/Vsample/Design_Trend_Mann_Kendall.htm
@@ -167,21 +154,25 @@ class Mann_Kendall_test(object):
         else:
             raise ValueError('Define a method')
 
-        if self.MK_modified or return_n:
+        y_detrend = self.y - (self.x * slope + intercept)
+
+        if self.MK_modified or effective_n:
             ## Compute modified MK using Yue and Wang (2004) method
-            y_detrend = self.y - (self.x * slope + intercept)
             acorrf = self._auto_correlation(y_detrend, nlags=self.n-1)
             idx = np.arange(1,self.n)
             sni = np.sum((1 - idx/self.n) * acorrf[idx])
-            self.n_ns = 1 + 2 * sni
-            self.var_s = self.var_s * self.n_ns
+            self.n = 1 + 2 * sni
+            self.var_s = self.var_s * self.n
             
         self.z_test = self.Z_test_score()
         p,h = self.P_value()
-        if return_n:
-            return slope,h,p,self.n_ns
+
+        std_error = self._calc_standard_error(y_detrend)
+
+        if effective_n:
+            return slope,h,p,std_error,self.n
         else:
-            return slope,h,p
+            return slope,h,p,std_error
 
     def xarray_MK_trend(self):
         """
@@ -189,27 +180,21 @@ class Mann_Kendall_test(object):
         Slope and intercept of the least square fit are added to a 
         array which contains the slope, significance mask and p-test.
         """
-        da=self.DataArray.copy().transpose('lat','lon','time')
+        da=self.DataArray.copy().transpose(*self.ordered_dims)
         axis_num = da.get_axis_num(self.dim)
 
         data = dsa.apply_along_axis(self._calc_slope_MK, axis_num, da.data, 
-                                    dtype=np.float64,shape=(3,))
+                                    dtype=np.float64,shape=(4,))
         
         return data
     
     def _calc_standard_error(self,y):
+        """
+        Wrapper that returns the standard_error using the effective sample size 
+        computed from a modified Mann-Kendall test
+        """
         std = np.std(y)
-        return std/self.n_ns
-    
-    def xarray_standard_error(self):
-        """
-        Compute significance of dataarray trends.
-        """
-        da=self.DataArray.copy().transpose('lat','lon','time')
-        axis_num = da.get_axis_num(self.dim)
-        data = dsa.apply_along_axis(self._calc_standard_error, axis_num, da.data, 
-                                    dtype=np.float64,shape=(1,))
-        return data
+        return std/self.n
     
     def compute(self,save=False,path=None):
         """
@@ -218,17 +203,23 @@ class Mann_Kendall_test(object):
         """
         trend_method=self.xarray_MK_trend()
         
-        trend = trend_method.compute()
+        MK_output = trend_method.compute()
         
-        serror = self.xarray_standard_error()
-        
-        ds = xr.Dataset({'trend': (['lat', 'lon'], trend[:,:,0]),
-                         'signif': (['lat', 'lon'], trend[:,:,1]),
-                         'p': (['lat', 'lon'], trend[:,:,2]),
-                         'serror': (['lat', 'lon'], serror)
+        if len(self.ordered_dims) == 2:
+            ds = xr.Dataset({'trend': (['x'], MK_output[:,0]),
+                         'signif': (['x'], MK_output[:,1]),
+                         'p': (['x'], MK_output[:,2]),
+                         'std_error': (['x'], MK_output[:,3])
                         },
-                        coords={'lon': (['lon'], self.DataArray.lon),
-                                'lat': (['lat'], self.DataArray.lat)})
+                        coords={'x': (['x'], self.DataArray.x)})
+        else:
+            ds = xr.Dataset({'trend': (['y', 'x'], MK_output[:,:,0]),
+                         'signif': (['y', 'x'], MK_output[:,:,1]),
+                         'p': (['y', 'x'], MK_output[:,:,2]),
+                         'std_error': (['y', 'x'], MK_output[:,:,3])
+                        },
+                        coords={'x': (['x'], self.DataArray.x),
+                                'y': (['y'], self.DataArray.y)})
         if path != None:
             ds.to_netcdf(path)
         elif save and path == None:
@@ -240,21 +231,21 @@ def init(__name__):
         """
         Example of implementation
         """
+        #from xarrayMannKendall import *
+        import numpy as np
+        import xarray as xr
         n=100
         time = np.arange(n)
         x = np.arange(4)
         y = np.arange(4)
-
         data = np.zeros((len(time), len(x), len(y)))
 
         da = xr.DataArray(data, coords=[time, x , y], 
-                            dims=['time', 'lon', 'lat'])
+                            dims=['time', 'x', 'y'])
 
         noise = np.random.randn(*np.shape(data))
         linear_trend = xr.DataArray(time, coords=[time], dims=['time'])
-
         da_with_linear_trend = (da + linear_trend) + noise
-
         MK_class = Mann_Kendall_test(da_with_linear_trend, 'time')
         MK_trends = MK_class.compute()
 
