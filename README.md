@@ -4,7 +4,7 @@
 |:----------------------:|:-------------:|
 | [![Build Status](https://travis-ci.com/josuemtzmo/xarrayMannKendall.svg?branch=master)](https://travis-ci.com/josuemtzmo/xarrayMannKendall) | [![codecov](https://codecov.io/gh/josuemtzmo/xarrayMannKendall/branch/master/graph/badge.svg)](https://codecov.io/gh/josuemtzmo/xarrayMannKendall) |
 
-`xarrayMannKendall` is a module to compute linear trends over 1D and 2D arrays.
+`xarrayMannKendall` is a module to compute linear trends over 2D and 3D arrays.
 For 2D arrays `xarrayMannKendall` uses [xarray](http://xarray.pydata.org/) parallel capabilities to speed up the computation. 
 
 For more information on the Mann-Kendall method please refer to:
