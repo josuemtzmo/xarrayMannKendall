@@ -17,7 +17,7 @@ For more information on the Mann-Kendall method please refer to:
 
 and
 
-> Hussain, M. and Mahmud, I. (2019). pyMannKendall: a python package for non parametric Mann Kendall family of trend tests. *Journal of Open Source Software*, **4(39)**, 1556. [doi: 10.21105/joss.01556](https://doi.org/doi: 10.21105/joss.01556)
+> Hussain, M. and Mahmud, I. (2019). pyMannKendall: a python package for non parametric Mann Kendall family of trend tests. *Journal of Open Source Software*, **4(39)**, 1556. doi:[10.21105/joss.01556](https://doi.org/10.21105/joss.01556)
 
 
 A useful resource can be found [here](https://vsp.pnnl.gov/help/vsample/Design_Trend_Mann_Kendall.htm). Finally, another library that allows to compute a larger range of Mann-Kendall methods is [pyMannKendall](https://github.com/mmhs013/pyMannKendall).
