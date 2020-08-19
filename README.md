@@ -20,9 +20,9 @@ and
 > Hussain, M., & Mahmud, I. (2019). pyMannKendall: a python package for non parametric Mann Kendall family of trend tests. Journal of Open Source Software, 4(39), 1556. doi: 10.21105/joss.01556
 
 
-An useful resource can be found [here](https://vsp.pnnl.gov/help/vsample/Design_Trend_Mann_Kendall.htm). Finally, another library that allows to compute a larger range of Mann-Kendall methods is [pyMannKendall](https://github.com/mmhs013/pyMannKendall).
+A useful resource can be found [here](https://vsp.pnnl.gov/help/vsample/Design_Trend_Mann_Kendall.htm). Finally, another library that allows to compute a larger range of Mann-Kendall methods is [pyMannKendall](https://github.com/mmhs013/pyMannKendall).
 
-This code was primarly developed for the analyisis of ocean Kinetic Energy trends 
+This package was primarily developed for the analyisis of ocean Kinetic Energy trends 
 over the satellite record period. (The manuscript will be available upon peer-review acceptance.)
 The data analysed with using this module can be found at:
 
