@@ -2,7 +2,7 @@
 
 | Travis CI (Python 3.8) | Code Coverage |
 |:----------------------:|:-------------:|
-|  |  |
+| [![Build Status](https://travis-ci.com/josuemtzmo/xarrayMannKendall.svg?branch=master)](https://travis-ci.com/josuemtzmo/xarrayMannKendall) | [![codecov](https://codecov.io/gh/josuemtzmo/xarrayMannKendall/branch/master/graph/badge.svg)](https://codecov.io/gh/josuemtzmo/xarrayMannKendall) |
 
 xarrayMannKendall is a module that allows to compute trens over 1D and 2D arrays.
 For 2D arrays xarrayMannKendall uses xarray parallel capabilities to speed up the computation. 
