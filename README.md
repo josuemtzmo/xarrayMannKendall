@@ -23,10 +23,9 @@ and
 A useful resource can be found [here](https://vsp.pnnl.gov/help/vsample/Design_Trend_Mann_Kendall.htm). Finally, another library that allows to compute a larger range of Mann-Kendall methods is [pyMannKendall](https://github.com/mmhs013/pyMannKendall).
 
 This package was primarily developed for the analyisis of ocean Kinetic Energy trends 
-over the satellite record period. (The manuscript will be available upon peer-review acceptance.)
-The data analysed with using this module can be found at:
+over the satellite record period. (A preprint of the manuscript is available at doi:[10.21203/rs.3.rs-88932/v1](https://doi.org/10.21203/rs.3.rs-88932/v1).)
 
-[Satellite KE repository]()
+The data analysed with using this module can be found at [`EKE_SST_trends`](https://github.com/josuemtzmo/EKE_SST_trends) repository.
 
 ## Installation:
 
