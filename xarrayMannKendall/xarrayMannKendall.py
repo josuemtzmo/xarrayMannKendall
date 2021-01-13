@@ -161,16 +161,16 @@ class Mann_Kendall_test(object):
             acorrf = self._auto_correlation(y_detrend, nlags=self.n-1)
             idx = np.arange(1,self.n)
             sni = np.sum((1 - idx/self.n) * acorrf[idx])
-            self.n = 1 + 2 * sni
-            self.var_s = self.var_s * self.n
+            n_star = 1 + 2 * sni
+            self.var_s = self.var_s * n_star
             
         self.z_test = self.Z_test_score()
         p,h = self.P_value()
 
         std_error = self._calc_standard_error(y_detrend)
-
+        ESS = self.n/n_star
         if effective_n:
-            return slope,h,p,std_error,self.n
+            return slope,h,p,std_error,ESS
         else:
             return slope,h,p,std_error
 
