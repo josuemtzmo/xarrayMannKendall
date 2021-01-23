@@ -54,4 +54,5 @@ pip install --ignore-installed --user .
 ## Cite this code:
 
 This repository can be cited as:
+
 Josué Martínez Moreno, & Navid C. Constantinou. (2021, January 23). josuemtzmo/xarrayMannKendall: Mann Kendall significance test implemented in xarray. (Version v.1.0.0). Zenodo. http://doi.org/10.5281/zenodo.4458777
