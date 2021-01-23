@@ -1,8 +1,8 @@
 # xarrayMannKendall
 
-| Travis CI (Python 3.8) | Code Coverage |
-|:----------------------:|:-------------:|
-| [![Build Status](https://travis-ci.com/josuemtzmo/xarrayMannKendall.svg?branch=master)](https://travis-ci.com/josuemtzmo/xarrayMannKendall) | [![codecov](https://codecov.io/gh/josuemtzmo/xarrayMannKendall/branch/master/graph/badge.svg)](https://codecov.io/gh/josuemtzmo/xarrayMannKendall) |
+| Travis CI (Python 3.8) | Code Coverage | Zenodo |
+|:----------------------:|:-------------:|:------:|
+| [![Build Status](https://travis-ci.com/josuemtzmo/xarrayMannKendall.svg?branch=master)](https://travis-ci.com/josuemtzmo/xarrayMannKendall) | [![codecov](https://codecov.io/gh/josuemtzmo/xarrayMannKendall/branch/master/graph/badge.svg)](https://codecov.io/gh/josuemtzmo/xarrayMannKendall) | [![DOI](https://zenodo.org/badge/288618695.svg)](https://zenodo.org/badge/latestdoi/288618695) |
 
 `xarrayMannKendall` is a module to compute linear trends over 2D and 3D arrays.
 For 2D arrays `xarrayMannKendall` uses [xarray](http://xarray.pydata.org/) parallel capabilities to speed up the computation. 
