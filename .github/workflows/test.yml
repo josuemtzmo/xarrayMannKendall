@@ -35,7 +35,6 @@ jobs:
           coverage xml
 
       - name: Update coverage
-        uses: actions/checkout@master
         uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
