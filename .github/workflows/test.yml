@@ -30,4 +30,14 @@ jobs:
           pip install -e .
       
       - name: Run unit tests
-        run: pytest -m xrMK --cov xarrayMannKendall
+        run: |
+          pytest -m xrMK --cov xarrayMannKendall
+          coverage xml
+
+      - name: Update coverage
+        uses: actions/checkout@master
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          flags: unittests
