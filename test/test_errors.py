@@ -134,3 +134,19 @@ def dimension_reload(da_reload):
 def test_smaller_dimension_size():
     MK_1, MK2=dimension_reload(da_reload)
     assert  np.equal(MK_1,MK2)
+
+################################################################################
+############################## Test no method ##################################
+################################################################################
+
+def no_method(data):
+    MK_class = Mann_Kendall_test(data, 'time', 
+                        coords_name = {'time':'time','lon':'x'},
+                        method="")
+    MK_trends = MK_class.compute()
+    return MK_trends
+
+@pytest.mark.xrMK
+def test_smaller_dimension_size():
+    with pytest.raises(ValueError, match=r"Define a method"):
+        no_method(da_reload)

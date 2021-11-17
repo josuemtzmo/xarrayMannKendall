@@ -3,11 +3,7 @@ import numpy as np
 import scipy.stats as sstats
 import dask.array as dsa
 
-try:
-    from xarrayMannKendall.decorators import dims_test, check_if_file_exists
-except:
-    from decorators import dims_test, check_if_file_exists
-
+from xarrayMannKendall.decorators import dims_test, check_if_file_exists
 
 class Mann_Kendall_test(object):
     """
