@@ -109,3 +109,28 @@ def dimension_name(da_names):
 def test_dimension_name():
     with pytest.raises(ValueError, match=r".* same dimensions as the .*"):
         dimension_name(da_names)
+
+
+################################################################################
+############################### Test reload ####################################
+################################################################################  
+n=100
+time = np.arange(n)
+x = np.arange(4)
+
+data = np.zeros((len(time), len(x)))
+
+da_reload = xr.DataArray(data, coords=[time,x], 
+                    dims=['time','lon'])
+
+def dimension_reload(da_reload):
+    MK_class = Mann_Kendall_test(da_reload, 'time', 
+                        coords_name = {'time':'time','lon':'x'})
+    MK_trends = MK_class.compute(path='./test.nc')
+    MK_trends_reload = MK_class.compute(path='./test.nc')
+    return MK_trends,MK_trends_reload
+
+@pytest.mark.xrMK
+def test_smaller_dimension_size():
+    MK_1, MK2=dimension_reload(da_reload)
+    assert  np.equal(MK_1,MK2)

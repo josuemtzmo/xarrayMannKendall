@@ -2,10 +2,12 @@ import xarray as xr
 import numpy as np
 import scipy.stats as sstats
 import dask.array as dsa
+
 try:
-    from xarrayMannKendall.decorators import dims_test
+    from xarrayMannKendall.decorators import dims_test, check_if_file_exists
 except:
-    from decorators import dims_test
+    from decorators import dims_test, check_if_file_exists
+
 
 class Mann_Kendall_test(object):
     """
@@ -197,7 +199,8 @@ class Mann_Kendall_test(object):
         std = np.std(y)
         return std/self.n
     
-    def compute(self,save=False,path=None):
+    @check_if_file_exists
+    def compute(self,save=False,path=None,rewrite_trends=True):
         """
         Wrapper to compute trends and returns a xr.Dataset contining 
         the slope, significance mask and p-test.
@@ -212,20 +215,28 @@ class Mann_Kendall_test(object):
                          'p': (['x'], MK_output[:,2]),
                          'std_error': (['x'], MK_output[:,3])
                         },
-                        coords={'x': (['x'], self.DataArray.x)})
+                        coords={'x': (['x'], da2py(self.DataArray.x, False))})
         else:
             ds = xr.Dataset({'trend': (['y', 'x'], MK_output[:,:,0]),
                          'signif': (['y', 'x'], MK_output[:,:,1]),
                          'p': (['y', 'x'], MK_output[:,:,2]),
                          'std_error': (['y', 'x'], MK_output[:,:,3])
                         },
-                        coords={'x': (['x'], self.DataArray.x),
-                                'y': (['y'], self.DataArray.y)})
+                        coords={'x': (['x'], da2py(self.DataArray.x,False)),
+                                'y': (['y'], da2py(self.DataArray.y,False))})
         if path != None:
             ds.to_netcdf(path)
         elif save and path == None:
             ds.to_netcdf('./tmp.nc')
         return ds
+
+def da2py(v, include_dims=True):
+    if isinstance(v, xr.DataArray):
+        if include_dims:
+            return (v.dims, v.values)
+        else:
+            return v.values
+    return v
 
 def init(__name__):
     if __name__ == "__main__":
@@ -248,6 +259,6 @@ def init(__name__):
         linear_trend = xr.DataArray(time, coords=[time], dims=['time'])
         da_with_linear_trend = (da + linear_trend) + noise
         MK_class = Mann_Kendall_test(da_with_linear_trend, 'time')
-        MK_trends = MK_class.compute()
+        MK_class.compute(path='test.nc')
 
 init(__name__)

@@ -8,11 +8,10 @@ from xarrayMannKendall import *
 n=100
 time = np.arange(n)
 x = np.arange(4)
-y = np.arange(4)
 
 data = np.zeros((len(time), len(x)))
 
-da = xr.DataArray(data, coords=[time, x ], 
+da = xr.DataArray(data, coords=[time, x], 
                     dims=['time', 'lon'])
 
 

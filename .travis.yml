@@ -13,7 +13,7 @@ install:
   - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION
   - source activate test-environment
   - conda install --file ./requirements.txt
-  - conda install pytest pytest-cov
+  - conda install pytest pytest-cov mock
   - pip install -e .
 script: pytest -m xrMK --cov=xarrayMannKendall
 after_success:

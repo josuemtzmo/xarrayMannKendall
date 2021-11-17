@@ -2,6 +2,9 @@
 .vscode/*
 .vscode
 
+# test trends file
+test.nc
+
 __pycache__/
 *.py[cod]
 *$py.class

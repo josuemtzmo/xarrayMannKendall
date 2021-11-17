@@ -1,5 +1,8 @@
 import functools
 import numpy as np
+import os
+import inspect
+import warnings
 
 
 def dims_test(init):  
@@ -46,3 +49,45 @@ def dims_test(init):
         init(self, *args, **kwargs)
 
     return dims_test_inner
+
+
+def check_if_file_exists(init):  
+    """
+    check_if_file_exists [decorator]
+
+    This decorator handles the reload of already existing files, to avoid computing multiple times the trends.
+
+    Parameters
+    ----------
+    init : [function]
+    
+    returns 
+    """
+    def get_default_args(func):
+        signature = inspect.signature(func)
+        return {
+            k: v.default
+            for k, v in signature.parameters.items()
+            if v.default is not inspect.Parameter.empty
+        }
+    
+    def reload_xarray(path):
+        warnings.warn("Loading file, if you want to rewrite the file, change the argument rewrite_trends to 'False' or change the output file name.")
+        import xarray as xr
+        return xr.open_dataset(path)   
+
+    @functools.wraps(init)
+    def file_exists_inner(self, *args, **kwargs):
+
+        kwds = get_default_args(init)
+        kwds.update(kwargs)
+
+        if kwds['rewrite_trends'] and kwds['path']!=None:
+            if os.path.exists(kwds['path']):
+                return reload_xarray(kwds['path'])
+            else:
+                return init(self, *args, **kwargs)
+        else:
+            return init(self, *args, **kwargs)
+            
+    return file_exists_inner
