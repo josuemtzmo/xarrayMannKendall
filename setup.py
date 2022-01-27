@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='xarrayMannKendall',
-    version='0.1',
+    version='1.3',
     description='Mann-Kendall statistical test to assess if a monotonic upward or downward trend exists over time.',
     url='https://github.com/josuemtzmo/xarrayMannKendall',
     author='josuemtzmo',
