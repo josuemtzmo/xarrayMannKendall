@@ -32,7 +32,14 @@ The data analysed with using this module can be found at [`EKE_SST_trends`](http
 
 ## Installation:
 
-Make sure you have the module requirements (`numpy` & `xarray`):
+You can install the latest tagged release of this package via `conda-forge` by:
+
+```
+conda install -c conda-forge xarrayMannKendall
+```
+
+Alternatively, you can clone the repository and install. To do so, make sure you
+have the module requirements (`numpy` & `xarray`):
 
 ```
 pip install -r requirements.txt 
