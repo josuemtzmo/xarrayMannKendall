@@ -1,8 +1,11 @@
+
+
+
 # xarrayMannKendall
 
-| Travis CI (Python 3.8) | Code Coverage | Zenodo |
-|:----------------------:|:-------------:|:------:|
-| [![Test](https://github.com/josuemtzmo/xarrayMannKendall/actions/workflows/test.yml/badge.svg)](https://github.com/josuemtzmo/xarrayMannKendall/actions/workflows/test.yml) | [![codecov](https://codecov.io/gh/josuemtzmo/xarrayMannKendall/branch/master/graph/badge.svg?token=KaUrfwvzf8)](https://codecov.io/gh/josuemtzmo/xarrayMannKendall) | [![DOI](https://zenodo.org/badge/288618695.svg)](https://zenodo.org/badge/latestdoi/288618695) |
+| Conda | Travis CI (Python 3.8) | Code Coverage | Zenodo |
+|:-----:|:----------------------:|:-------------:|:------:|
+| [![conda-forge](https://img.shields.io/conda/vn/conda-forge/xarrayMannKendall.svg)](https://anaconda.org/conda-forge/xarrayMannKendall) | [![Test](https://github.com/josuemtzmo/xarrayMannKendall/actions/workflows/test.yml/badge.svg)](https://github.com/josuemtzmo/xarrayMannKendall/actions/workflows/test.yml) | [![codecov](https://codecov.io/gh/josuemtzmo/xarrayMannKendall/branch/master/graph/badge.svg?token=KaUrfwvzf8)](https://codecov.io/gh/josuemtzmo/xarrayMannKendall) | [![DOI](https://zenodo.org/badge/288618695.svg)](https://zenodo.org/badge/latestdoi/288618695) |
 
 `xarrayMannKendall` is a module to compute linear trends over 2D and 3D arrays.
 For 2D arrays `xarrayMannKendall` uses [xarray](http://xarray.pydata.org/) parallel capabilities to speed up the computation. 
@@ -29,7 +32,14 @@ The data analysed with using this module can be found at [`EKE_SST_trends`](http
 
 ## Installation:
 
-Make sure you have the module requirements (`numpy` & `xarray`):
+You can install the latest tagged release of this package via `conda-forge` by:
+
+```
+conda install -c conda-forge xarrayMannKendall
+```
+
+Alternatively, you can clone the repository and install. To do so, make sure you
+have the module requirements (`numpy` & `xarray`):
 
 ```
 pip install -r requirements.txt 
