@@ -203,7 +203,7 @@ class Mann_Kendall_test(object):
         the slope, significance mask and p-test.
         """
         trend_method=self.xarray_MK_trend()
-        if progress_bar and not scheduler:
+        if progress_bar and scheduler:
             with ProgressBar():
                 MK_output = trend_method.compute(scheduler=scheduler)
         else:
