@@ -2,6 +2,7 @@ import xarray as xr
 import numpy as np
 import scipy.stats as sstats
 import dask.array as dsa
+from dask.diagnostics import ProgressBar
 
 from xarrayMannKendall.decorators import dims_test, check_if_file_exists
 
@@ -196,15 +197,18 @@ class Mann_Kendall_test(object):
         return std/self.n
     
     @check_if_file_exists
-    def compute(self,save=False,path=None,rewrite_trends=True):
+    def compute(self,save=False,path=None,rewrite_trends=True, scheduler=None,progress_bar=False):
         """
         Wrapper to compute trends and returns a xr.Dataset contining 
         the slope, significance mask and p-test.
         """
         trend_method=self.xarray_MK_trend()
-        
-        MK_output = trend_method.compute()
-        
+        if progress_bar and scheduler:
+            with ProgressBar():
+                MK_output = trend_method.compute(scheduler=scheduler)
+        else:
+            MK_output = trend_method.compute(scheduler=scheduler)
+
         if len(self.ordered_dims) == 2:
             ds = xr.Dataset({'trend': (['x'], MK_output[:,0]),
                          'signif': (['x'], MK_output[:,1]),

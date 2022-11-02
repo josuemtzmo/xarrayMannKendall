@@ -76,3 +76,24 @@ def test_2d_small_noise(scale):
     assert  np.not_equal(dataarray.std_error,0).all()
     np.testing.assert_almost_equal(dataarray.p.values, 0, 4)
 
+################################################################################
+############################# Trends + scheduler ###############################
+################################################################################  
+
+def trends_2d_scheduler(da,scale):
+    linear_trend = xr.DataArray(time, coords=[time], dims=['time'])
+    noise = np.random.randn(*np.shape(data))
+    dataarray_plus_lt = (da + linear_trend) + noise * scale
+    MK_class = Mann_Kendall_test(dataarray_plus_lt, 'time')
+    MK_trends = MK_class.compute(save=True, scheduler="multiprocessing",progress_bar=True)
+    return MK_trends
+
+@pytest.mark.parametrize(('scale'), np.arange(1,10))
+
+@pytest.mark.xrMK
+def test_2d_small_scheduler(scale):
+    dataarray = trends_2d_scheduler(da,scale)
+    np.testing.assert_almost_equal(dataarray.trend.values, 1, 1)
+    assert  np.equal(dataarray.signif,1).all()
+    assert  np.not_equal(dataarray.std_error,0).all()
+    np.testing.assert_almost_equal(dataarray.p.values, 0, 4)
