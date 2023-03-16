@@ -6,7 +6,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name='xarrayMannKendall',
-    version='1.4.3',
+    version='1.4.4',
     description='Mann-Kendall statistical test to assess if a monotonic upward or downward trend exists over time.',
     url='https://github.com/josuemtzmo/xarrayMannKendall',
     author='josuemtzmo',
