@@ -124,7 +124,7 @@ class Mann_Kendall_test(object):
     def _check_length(self):
         # Make sure that x and y have the same length and they are not empty.
         if not self.x.size > 0 or not self.y.size > 0 or self.n ==0:
-            self.x = np.array([0,0])
+            self.x = np.array([0,1])
             self.y = np.array([0,0])
             self.n = len(self.y)
 
@@ -141,7 +141,7 @@ class Mann_Kendall_test(object):
         '''
         self._pre_computation(y)
         self._check_length()
-        
+
         self.score = self.MK_score()
         
         self.var_s = self.VAR_score()
